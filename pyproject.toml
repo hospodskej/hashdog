@@ -1,7 +1,7 @@
 [project]
-name = "hash-identifier"
-version = "0.1.0"
-description = "Add your description here"
+name = "hashdog"
+version = "1.0.2"
+description = "Simple hash identifier"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
