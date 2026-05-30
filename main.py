@@ -15,53 +15,66 @@ class HashCandidate:
 	reason: str
 
 PREFIX_RULES: list[tuple[str, str, str]] = [
-    #Argon 2 family
-    ("$argon2id$", "Argon2id", "modern PHC string, the current standard"),
-    ("$argon2i$", "Argon2i", "PHC string, side-channel-resistant variant"),
-    ("$argon2d$", "Argon2d", "PHC string, GPU-resistant variant"),
+    	# Argon 2 family
+    	("$argon2id$", "Argon2id", "modern PHC string, the current standard"),
+    	("$argon2i$", "Argon2i", "PHC string, side-channel-resistant variant"),
+    	("$argon2d$", "Argon2d", "PHC string, GPU-resistant variant"),
 
-    #bcrypt
-    ("$2y$", "bcrypt", "bcrypt PHC string, 2y variant (PHP)"),
-    ("$2b$", "bcrypt", "bcrypt PHC string, 2b variant (current)"),
-    ("$2a$", "bcrypt", "bcrypt PHC string, 2a variant (legacy)"),
-    ("$2x$", "bcrypt", "bcrypt PHC string, 2x variant (legacy fix)"),
+    	# bcrypt
+    	("$2y$", "bcrypt", "bcrypt PHC string, 2y variant (PHP)"),
+    	("$2b$", "bcrypt", "bcrypt PHC string, 2b variant (current)"),
+    	("$2a$", "bcrypt", "bcrypt PHC string, 2a variant (legacy)"),
+    	("$2x$", "bcrypt", "bcrypt PHC string, 2x variant (legacy fix)"),
 
-    #Unix crypt family
-    ("$6$", "SHA-512 crypt", "Unix crypt(3) using SHA-512 (default on Linux)"),
-    ("$5$", "SHA-256 crypt", "Unix crypt(3) using SHA-256"),
-    ("$1$", "MD5 crypt", "Unix crypt(3) using MD5 (legacy, weak)"),
+    	# Unix crypt family
+    	("$6$", "SHA-512 crypt", "Unix crypt(3) using SHA-512 (default on Linux)"),
+    	("$5$", "SHA-256 crypt", "Unix crypt(3) using SHA-256"),
+    	("$1$", "MD5 crypt", "Unix crypt(3) using MD5 (legacy, weak)"),
 
-    #Apache htpasswd MD5 variant
-    ("$apr1$", "Apache MD5-crypt", "Apache htpasswd MD5 variant (`htpasswd -m`)"),
+    	# Apache htpasswd MD5 variant
+    	("$apr1$", "Apache MD5-crypt", "Apache htpasswd MD5 variant (`htpasswd -m`)"),
 
-    #yescrypt
-    ("$y$", "yescrypt", "PHC string, modern Linux crypt successor"),
+    	# yescrypt
+    	("$y$", "yescrypt", "PHC string, modern Linux crypt successor"),
 
-    #phpass
-    ("$P$", "phpass", "WordPress / phpBB password hash"),
-    ("$H$", "phpass", "phpBB-style phpass variant"),
+    	# phpass
+    	("$P$", "phpass", "WordPress / phpBB password hash"),
+    	("$H$", "phpass", "phpBB-style phpass variant"),
 
-    #Drupal 7
-    ("$S$", "Drupal 7 (SHA-512)", "Drupal 7 PHC-style hash"),
+    	# Drupal 7
+    	("$S$", "Drupal 7 (SHA-512)", "Drupal 7 PHC-style hash"),
 
-    #scrypt
-    ("$7$", "scrypt", "scrypt PHC-style hash"),
+    	# scrypt
+    	("$7$", "scrypt", "scrypt PHC-style hash"),
 
-    #Django's default
-    ("pbkdf2_sha256$", "Django PBKDF2-SHA256", "Django default password hash"),
-    ("pbkdf2_sha1$", "Django PBKDF2-SHA1", "Django legacy password hash"),
-    ("bcrypt_sha256$", "Django bcrypt-SHA256", "Django bcrypt wrapper"),
-    ("argon2$", "Django Argon2", "Django Argon2 wrapper"),
+    	# Django's default
+    	("pbkdf2_sha256$", "Django PBKDF2-SHA256", "Django default password hash"),
+    	("pbkdf2_sha1$", "Django PBKDF2-SHA1", "Django legacy password hash"),
+    	("bcrypt_sha256$", "Django bcrypt-SHA256", "Django bcrypt wrapper"),
+    	("argon2$", "Django Argon2", "Django Argon2 wrapper"),
 
-    # LDAP password schemes
-    ("{SSHA}", "LDAP SSHA", "LDAP salted SHA-1 (base64 payload)"),
-    ("{SHA}", "LDAP SHA", "LDAP SHA-1 (base64 payload)"),
-    ("{SMD5}", "LDAP SMD5", "LDAP salted MD5 (base64 payload)"),
-    ("{MD5}", "LDAP MD5", "LDAP MD5 (base64 payload)"),
-    ("{CRYPT}", "LDAP CRYPT", "LDAP wrapping a crypt(3) hash"),
+   	# LDAP password schemes
+	("{SSHA}", "LDAP SSHA", "LDAP salted SHA-1 (base64 payload)"),
+	("{SHA}", "LDAP SHA", "LDAP SHA-1 (base64 payload)"),
+	("{SMD5}", "LDAP SMD5", "LDAP salted MD5 (base64 payload)"),
+    	("{MD5}", "LDAP MD5", "LDAP MD5 (base64 payload)"),
+    	("{CRYPT}", "LDAP CRYPT", "LDAP wrapping a crypt(3) hash"),
+
+   	# Atlassian
+	("$pbkdf2$", "PBKDF2-SHA1", "Older Atlassian / Jira hashes"),
+	("{x-pbkdf2}", "PBKDF2", "LDAP-style wrapper"),
+
+	# macOS
+	("$ml$", "macOS / iCloud Keychain", "Apple PBKDF2-SHA512"),
+
+	# crypt(3)
+	("$sha1$", "sha1crypt", "A rare crypt(3) variant"),
+
+	# MD5
+	("$md5,", "Solaris MD5 crypt", "Comma instead of $"),
 ]
 
-HEX_CHARSET: frozen[str] = frozenset("0123456789abcdefABCDEF")
+HEX_CHARSET: frozenset[str] = frozenset("0123456789abcdefABCDEF")
 _HEX_UPPER_CHARSET: frozenset[str] = frozenset("0123456789ABCDEF")
 
 HEX_LENGTH_RULES: dict[int, list[str]] = {
@@ -83,7 +96,7 @@ _MYSQL5_HEX_BODY_LENGTH = 40
 _MYSQL5_TOTAL_LENGTH = _MYSQL5_HEX_BODY_LENGTH + 1
 
 def _is_mysql5(text: str) -> bool:
-	if len(text) != _MYSQL5_TOTAL_LENGTH or not text.startwith("*"):
+	if len(text) != _MYSQL5_TOTAL_LENGTH or not text.startswith("*"):
 		return False
 	body = text[1 :]
 	return all(c in _HEX_UPPER_CHARSET for c in body)
@@ -101,23 +114,23 @@ def _is_descrypt(text: str) -> bool:
 		and all(c in _DESCRYPT_CHARSET for c in text)
 	)
 
-def identify(raw_input: str) -> list[HashCandidate]
+def identify(raw_input: str) -> list[HashCandidate]:
 	text = raw_input.strip()
 
 	if not text:
 		return []
 
-	for prefix, algorithm, note in PREFIX:RULES:
-		if text.startwith(prefix):
+	for prefix, algorithm, note in PREFIX_RULES:
+		if text.startswith(prefix):
 			return [
 				HashCandidate(
 					algorithm = algorithm,
-					confidence = "high"
+					confidence = "high",
 					reason = f"prefix '{prefix}' - {note}",
 				)
 			]
 
-	if "::" in text and text.count(":" >=4:
+	if "::" in text and text.count(":") >=4:
 		parts = text.split(":")
 		if (len(parts) >= 6 and len(parts[4]) == 32 and _is_hex(parts[4])):
 			return [
@@ -145,34 +158,34 @@ def identify(raw_input: str) -> list[HashCandidate]
             		)
         	]
 
-    	if _is_descrypt(text):
-        	return [
-            		HashCandidate(
-                		algorithm = "DES crypt",
-                		confidence = "medium",
-                		reason ="13 chars in `./0-9A-Za-z` — legacy /etc/passwd format",
+	if _is_descrypt(text):
+		return [
+			HashCandidate(
+				algorithm = "DES crypt",
+				confidence = "medium",
+				reason ="13 chars in `./0-9A-Za-z` — legacy /etc/passwd format",
             		)
         	]
 
-    	if _is_hex(text):
-        	algorithms = HEX_LENGTH_RULES.get(len(text), [])
-        	candidates: list[HashCandidate] = []
-        	for index, algorithm in enumerate(algorithms):
- 			confidence: Confidence = "medium" if index == 0 else "low"
-            		label = (
+	if _is_hex(text):
+		algorithms = HEX_LENGTH_RULES.get(len(text), [])
+		candidates: list[HashCandidate] = []
+		for index, algorithm in enumerate(algorithms):
+			confidence: Confidence = "medium" if index == 0 else "low"
+			label = (
                 		"most likely candidate at this length"
                 		if index == 0 else "also possible at this length"
             		)
-            		candidates.append(
-                		HashCandidate(
-                    			algorithm = algorithm,
-                    			confidence = confidence,
-                    			reason = f"{len(text)} hex chars — {label}",
+			candidates.append(
+				HashCandidate(
+					algorithm = algorithm,
+					confidence = confidence,
+					reason = f"{len(text)} hex chars — {label}",
                 		)
             		)
-        	return candidates
+		return candidates
 
-	if text.startwith("$"):
+	if text.startswith("$"):
 		rest = text[1 :]
 		if "$" in rest:
 			algo_name = rest.split("$", 1)[0]
@@ -186,7 +199,7 @@ def identify(raw_input: str) -> list[HashCandidate]
 					)
 				]
 
-	if text.startwith("eyJ"):
+	if text.startswith("eyJ"):
 		return [
 			HashCandidate(
 				algorithm = "JWT",
